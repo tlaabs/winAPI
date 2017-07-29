@@ -7,10 +7,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 //wParam, iParam : 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
-	//hInstance[1] : 커널이 프로그램에 부여하는 ID, 응용프로그램을 구분하려고사용 
-	//hInstance[2] : 알거없음
-	//IpszCmdLine : 외부에서 넘어오는 문자열, argv와 비슷하다
-	//nCmdShow : 윈도우가 화면에 출력될 때 형태를 정의(잘 모르겠다)
+//hInstance[1] : 커널이 프로그램에 부여하는 ID, 응용프로그램을 구분하려고사용 
+//hInstance[2] : 알거없음
+//IpszCmdLine : 외부에서 넘어오는 문자열, argv와 비슷하다
+//nCmdShow : 윈도우가 화면에 출력될 때 형태를 정의(잘 모르겠다)
 {
 	HWND hwnd;
 	MSG msg;
@@ -20,34 +20,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	WndClass.cbClsExtra = 0;
 	WndClass.cbWndExtra = 0;
 	WndClass.hInstance = hInstance; //응용프로그램 인스턴스 값
-	WndClass.hIcon = LoadIcon(NULL, IDI_QUESTION);
-	WndClass.hCursor = LoadCursor(NULL, IDC_IBEAM);
-	WndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);//배경색
+	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//배경색
 	WndClass.lpszMenuName = NULL; //메뉴이름
 	WndClass.lpszClassName = _T("Window Class Name"); //클래스 이름
 
 	RegisterClass(&WndClass);//윈도우 클래스를 커널에 등록
-	//여러개 등록 가능
+							 //여러개 등록 가능
 	hwnd = CreateWindow(_T("Window Class Name"), //윈도우 클래스 이름
-		_T("홍길동의 첫 번째 윈도우"),//윈도우 타이틀 이름
+		_T("Window Title Name"),//윈도우 타이틀 이름
 		WS_OVERLAPPEDWINDOW, //윈도우 스타일
-		//타이틀바에 최소화, 최대화, 닫기 그리고 마우스 오른쪽버튼을 눌렀을 때 시스템 메뉴가 나타남
-		//CW_USEDEFAULT - 커널에 의해 기본값을 사용
-		200,//윈도우 위치 X
-		300,//윈도우 위치 Y
-		600,//윈도우 가로 크기
-		400,//윈도우 세로 크기
+							 //타이틀바에 최소화, 최대화, 닫기 그리고 마우스 오른쪽버튼을 눌렀을 때 시스템 메뉴가 나타남
+							 //CW_USEDEFAULT - 커널에 의해 기본값을 사용
+		CW_USEDEFAULT,//윈도우 위치 X
+		CW_USEDEFAULT,//윈도우 위치 Y
+		CW_USEDEFAULT,//윈도우 가로 크기
+		CW_USEDEFAULT,//윈도우 세로 크기
 		NULL,//부모 윈도우 핸들
 		NULL,//메뉴 핸들
 		hInstance,//
 		NULL//생성 윈도우 정보
-		);
+	);
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	while (GetMessage(&msg, NULL, 0, 0)) 
-	//&msg : 메시지가 저장된 MSG구조체에 대한 포인터
-	//NULL : 메시지가 발생한 윈도우의 핸들
+	while (GetMessage(&msg, NULL, 0, 0))
+		//&msg : 메시지가 저장된 MSG구조체에 대한 포인터
+		//NULL : 메시지가 발생한 윈도우의 핸들
 	{
 		TranslateMessage(&msg);
 		//두 메시지를 하나로 변환 - 잘모르겠다.
@@ -62,6 +62,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg,
 {
 	HDC hdc;
 	PAINTSTRUCT ps;
+	RECT rect;
 
 	switch (iMsg)
 	{
@@ -69,7 +70,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg,
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hwnd, &ps);
-		//출력
+		rect.left = 50;
+		rect.top = 40;
+		rect.right = 200;
+		rect.bottom = 120;
+		DrawText(hdc, _T("HelloWorld"), 10, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+		TextOut(hdc, 100, 100, _T("Hello 안녕"), _tcslen(_T("Hello 안녕")));
 		EndPaint(hwnd, &ps);
 		break;
 	case WM_DESTROY:
