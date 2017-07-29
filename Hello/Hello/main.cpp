@@ -20,23 +20,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 	WndClass.cbClsExtra = 0;
 	WndClass.cbWndExtra = 0;
 	WndClass.hInstance = hInstance; //응용프로그램 인스턴스 값
-	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	WndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//배경색
+	WndClass.hIcon = LoadIcon(NULL, IDI_QUESTION);
+	WndClass.hCursor = LoadCursor(NULL, IDC_IBEAM);
+	WndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);//배경색
 	WndClass.lpszMenuName = NULL; //메뉴이름
 	WndClass.lpszClassName = _T("Window Class Name"); //클래스 이름
 
 	RegisterClass(&WndClass);//윈도우 클래스를 커널에 등록
 	//여러개 등록 가능
 	hwnd = CreateWindow(_T("Window Class Name"), //윈도우 클래스 이름
-		_T("Window Title Name"),//윈도우 타이틀 이름
+		_T("홍길동의 첫 번째 윈도우"),//윈도우 타이틀 이름
 		WS_OVERLAPPEDWINDOW, //윈도우 스타일
 		//타이틀바에 최소화, 최대화, 닫기 그리고 마우스 오른쪽버튼을 눌렀을 때 시스템 메뉴가 나타남
 		//CW_USEDEFAULT - 커널에 의해 기본값을 사용
-		CW_USEDEFAULT,//윈도우 위치 X
-		CW_USEDEFAULT,//윈도우 위치 Y
-		CW_USEDEFAULT,//윈도우 가로 크기
-		CW_USEDEFAULT,//윈도우 세로 크기
+		200,//윈도우 위치 X
+		300,//윈도우 위치 Y
+		600,//윈도우 가로 크기
+		400,//윈도우 세로 크기
 		NULL,//부모 윈도우 핸들
 		NULL,//메뉴 핸들
 		hInstance,//
@@ -58,7 +58,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLi
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg,
-	WPARAM wParam, LPARAM lParam) {
+	WPARAM wParam, LPARAM lParam)
+{
 	switch (iMsg)
 	{
 	case WM_CREATE:
