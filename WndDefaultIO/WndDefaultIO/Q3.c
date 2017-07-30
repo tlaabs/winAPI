@@ -1,10 +1,12 @@
 #include <windows.h> //win32API 라이브러리
 #include <TCHAR.H>//멀티바이트, 유니코드 상관없이 처리
+#define LINE_MAX 5
 LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 //hwnd : 윈도우 핸들값(CreateWindow 함수를 통해 만들어짐)
 //윈도우 핸들에는 윈도우 가로 세로 크기, 스타일, 타이틀 이름등의 정보가 담겨있음.
-//iMsg : 이벤트 값
-//wParam, iParam : 
+//iMsg : 이벤트 값 ex:(WM_KEYDOWN, WM_CHAR, WM_KEYUP)
+//wParam: 가상키의 값(VK_TAB,VK_BACK)
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 //hInstance[1] : 커널이 프로그램에 부여하는 ID, 응용프로그램을 구분하려고사용 
@@ -62,35 +64,39 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg,
 {
 	HDC hdc;
 	PAINTSTRUCT ps;
-	static TCHAR str[100];
-	static int count, yPos;
-	RECT rt = { 0,0,1000,1000 };
-	static SIZE size;
-	HPEN hPen, oldPen;
-	HBRUSH hBrush, oldBrush;
-	POINT point1[10] = { {10,150},{250,30},{500, 150},{350,300},{150,300} };
-	POINT point2[10] = { { 30,120 },{ 200,15 },{ 300, 100 },{ 350,300 },{ 100,150 } };
+	static TCHAR str[10][100];
+	static int count = 0;
+	static int lines = 0;
+	int i = 0;
 	switch (iMsg)
 	{
 	case WM_CREATE:
-		
-		count = 0;
-		yPos = 0;
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hwnd, &ps);
-
-		hBrush = CreateSolidBrush(RGB(255, 0, 0));
-		oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
-		Polygon(hdc, point1,5);
-		SelectObject(hdc, oldBrush);
-		DeleteObject(hBrush);
+		while (i <= lines)
+		{
+			TextOut(hdc, 0, i * 20, str[i], _tcslen(str[i]));
+			i++;
+		}
 		EndPaint(hwnd, &ps);
 		break;
 	case WM_CHAR:
-		if (wParam == VK_BACK && count > 0) count--;
-		else str[count++] = wParam;
-		str[count] = NULL;
+		if (wParam == VK_RETURN)
+		{
+			lines++;
+			count = 0;
+		}
+		else
+		{
+			if (count >= LINE_MAX)
+			{
+				lines++;
+				count = 0;
+			}
+			str[lines][count++] = wParam;
+		}
+		str[lines][count] = NULL;
 		InvalidateRgn(hwnd, NULL, TRUE);
 		break;
 	case WM_DESTROY:
