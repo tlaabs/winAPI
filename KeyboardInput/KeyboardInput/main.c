@@ -65,31 +65,33 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT iMsg,
 	static TCHAR str[100];
 	static int count, yPos;
 	RECT rt = { 0,0,1000,1000 };
+	static SIZE size;
 
 	switch (iMsg)
 	{
 	case WM_CREATE:
+		CreateCaret(hwnd, NULL, 5, 15);
+		ShowCaret(hwnd);
 		count = 0;
 		yPos = 0;
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hwnd, &ps);
-		//TextOut(hdc,0, yPos, str, _tcslen(str));
-		DrawText(hdc, str, _tcslen(str), &rt, DT_TOP | DT_LEFT);
-		EndPaint(&hwnd, &ps);
+		GetTextExtentPoint(hdc, str, _tcslen(str), &size);
+		//문자열이 화면에서 차지하는 공간
+		TextOut(hdc,0, 0, str, _tcslen(str));
+		SetCaretPos(size.cx, 0);
+		EndPaint(hwnd, &ps);
 		break;
 	case WM_CHAR:
 		if (wParam == VK_BACK && count > 0) count--;
-		/*else if (wParam == VK_RETURN)
-		{
-			count = 0;
-			yPos = yPos + 20;
-		}*/
 		else str[count++] = wParam;
 		str[count] = NULL;
 		InvalidateRgn(hwnd, NULL, TRUE);
 		break;
 	case WM_DESTROY:
+		HideCaret(hwnd);
+		DestroyCaret();
 		PostQuitMessage(0);
 		break;
 	}
